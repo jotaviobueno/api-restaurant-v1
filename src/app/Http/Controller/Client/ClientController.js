@@ -1,8 +1,9 @@
 // Repository
-import repository from "../../Repository/Client.js";
+import repository from "../../Repository/Client/ClientRepository.js";
 
 // Helpers
 import ClientHelper from "../../../Helper/Client/ClientHelper.js";
+import LoginHelper from "../../../Helper/Client/LoginHelper.js";
 import ResponseHelper from "../../../Helper/ResponseHelper.js";
 
 class ClientController {
@@ -30,6 +31,63 @@ class ClientController {
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 
 	}
+
+	async LoginEmail ( req, res ) {
+		const { email, password } = req.body;
+
+		await LoginHelper.checkAmountNumberOfLogins( email );
+
+		const ClientInfo = await ClientHelper.existEmail( email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "email not registered" });
+
+		if (! await ClientHelper.comparePassword( password, ClientInfo.password ) )
+			return await ResponseHelper.notAuthorized( res, { error:  "not authorized" });
+
+		const sessionInfo = await repository.CreateSession( email );
+
+		if ( sessionInfo )
+			return await ResponseHelper.created( res, { 
+				success:  "login made", 
+				email: sessionInfo.email,
+				name: ClientInfo.name,
+				session_id: sessionInfo.session_token,
+				login_made_in: sessionInfo.login_made_in
+		
+			});
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
+
+	async LoginCpf ( req, res ) {
+		const { cpf, password } = req.body;
+
+		const ClientInfo = await ClientHelper.existCpf( cpf );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "cpf not registered" });
+
+		await LoginHelper.checkAmountNumberOfLogins( ClientInfo.email );
+
+		if (! await ClientHelper.comparePassword( password, ClientInfo.password ) )
+			return await ResponseHelper.notAuthorized( res, { error:  "not authorized" });
+
+		const sessionInfo = await repository.CreateSession( ClientInfo.email );
+
+		if ( sessionInfo )
+			return await ResponseHelper.created( res, { 
+				success:  "login made", 
+				email: sessionInfo.email, 
+				name: ClientInfo.name,
+				session_id: sessionInfo.session_token,
+				login_made_in: sessionInfo.login_made_in
+		
+			});
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
+
 }
 
 export default new ClientController;
