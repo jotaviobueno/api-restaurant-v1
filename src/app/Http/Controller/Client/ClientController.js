@@ -14,8 +14,8 @@ class ClientController {
 		if ( await ClientHelper.existEmail( email ) )
 			return await ResponseHelper.unprocessableEntity( res, { error:  "email already registered" });
 
-	 	if ( await ClientHelper.existCpf( cpf ) )
-		 	return await ResponseHelper.unprocessableEntity( res, { error:  "cpf already registered" });
+		if ( await ClientHelper.existCpf( cpf ) )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "cpf already registered" });
 
 		const clientInfo = await repository.Storage( name, email, password, cpf );
 

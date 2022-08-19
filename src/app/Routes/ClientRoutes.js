@@ -16,5 +16,5 @@ ClientRoutes.post( "/register", ClientRequest.ValidateStorage, ClientController.
 ClientRoutes.post( "/login-email", ClientRequest.ValidateLoginEmail, ClientController.LoginEmail );
 ClientRoutes.post( "/login-cpf", ClientRequest.ValidateLoginCpf, ClientController.LoginCpf );
 ClientRoutes.get( "/my-account", ClientRequest.ValidateSeeAccount, ClientController.SeeAccount );
-ClientRoutes.delete( "/my-account/delete", ClientController.Delete );
+ClientRoutes.delete( "/my-account/delete", ClientRequest.ValidateDelete, ClientController.Delete );
 ClientRoutes.patch( "/my-account/update-name", UpdateRequest.ValidateUpdateName, UpdateController.UpdateName );
