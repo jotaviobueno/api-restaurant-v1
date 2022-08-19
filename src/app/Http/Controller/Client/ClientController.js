@@ -107,6 +107,41 @@ class ClientController {
 
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
+
+	async Delete ( req, res ) {
+		const { session_token } = req.headers;
+		const { password } = req.body;
+
+		const SessionInfo = await LoginHelper.existToken( session_token );
+
+		if (! SessionInfo )
+			return await ResponseHelper.badRequest( res, { error:  "your session is invalid" });
+
+		const ClientInfo = await ClientHelper.existEmail( SessionInfo.email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "your email is invalid" });
+
+		if (! await ClientHelper.comparePassword( password, ClientInfo.password ) )
+			return await ResponseHelper.notAuthorized( res, { error:  "not authorized" });
+
+		const deletetionInfo = await repository.deleteAccountAndCreateLog( ClientInfo );
+
+		if ( deletetionInfo ) {
+			await LoginHelper.disconnectAllSessions( ClientInfo.email );
+
+			return await ResponseHelper.success( res, { 
+				success:  "account info", 
+				deletetion_info: {
+					email_deleted: deletetionInfo.email,
+					cpf_deleted: deletetionInfo.cpf,
+					deleted_at: deletetionInfo.deleted_at
+				}
+			});
+		}
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
 }
 
 export default new ClientController;

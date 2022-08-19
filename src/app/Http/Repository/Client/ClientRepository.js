@@ -1,6 +1,7 @@
 // Models
 import ClientModel from "../../../Models/Client/ClientModel.js";
 import LoginModel from "../../../Models/Client/LoginModel.js";
+import DeletionRecordModel from "../../../Models/Client/Log/DeletionRecordModel.js";
 
 // dependencies
 import bcrypt from "bcrypt";
@@ -38,6 +39,19 @@ class repository {
 			return false;
         
 		return findEmail;
+	}
+	
+	async deleteAccountAndCreateLog ( ClientInfo ) {
+		await ClientModel.findOneAndUpdate({ email: ClientInfo.email, deleted_at: null }, { deleted_at: new Date() });
+
+		return await DeletionRecordModel.create({
+			email: ClientInfo.email,
+			name: ClientInfo.name,
+			cpf: ClientInfo.cpf,
+			role: ClientInfo.role,
+			deleted_at: new Date()
+		});
+
 	}
 }
 

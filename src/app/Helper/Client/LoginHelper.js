@@ -22,6 +22,10 @@ class LoginHelper {
         
 		return findToken;
 	}
+
+	async disconnectAllSessions ( email ) {
+		await LoginModel.findOneAndUpdate({ email: email, disconnected_in: null }, { disconnected_in: new Date() });
+	}
 }
 
 export default new LoginHelper;
