@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const LogUpdateModel = mongoose.model( "LogUpdate", {
 
-	email: { type: String, required: true },
+	email: { type: String },
 	new_name: { type: String },
 	old_name: { type: String },
 	new_email: { type: String },

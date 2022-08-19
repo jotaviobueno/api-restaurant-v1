@@ -18,7 +18,20 @@ class AuthHelper {
 
 		if ( findAllUserToken.length >= 1 )
 			await TokenChangeEmailModel.updateMany({ email: email }, { status: false });
-            
+
+	}
+
+	async thisEmailChangeTokenExists ( change_token ) {
+		const findToken = await TokenChangeEmailModel.findOne({ token: change_token, status: null });
+
+		if ( findToken === null )
+			return false;
+
+		return findToken;
+	}
+
+	async deleteToken ( token ) {
+		await TokenChangeEmailModel.findOneAndUpdate({ token: token, status: null }, { status: true });
 	}
 }
 

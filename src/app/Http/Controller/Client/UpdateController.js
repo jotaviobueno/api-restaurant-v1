@@ -5,6 +5,7 @@ import repository from "../../Repository/Client/UpdateRepository.js";
 import ClientHelper from "../../../Helper/Client/ClientHelper.js";
 import LoginHelper from "../../../Helper/Client/LoginHelper.js";
 import ResponseHelper from "../../../Helper/ResponseHelper.js";
+import AuthHelper from "../../../Helper/Client/AuthHelper.js";
 
 class UpdateController {
 
@@ -28,7 +29,7 @@ class UpdateController {
 		if (! await ClientHelper.comparePassword( password, ClientInfo.password ) )
 			return await ResponseHelper.notAuthorized( res, { error:  "not authorized" });
 		
-		const UpdateInfo = await repository.updateNameAndCreateLog( ClientInfo.name, new_name, ClientInfo.email );
+		const UpdateInfo = await repository.UpdateNameAndCreateLog( ClientInfo.name, new_name, ClientInfo.email );
 
 		if ( UpdateInfo )
 			return await ResponseHelper.success( res, { 
@@ -38,6 +39,42 @@ class UpdateController {
 				old_name: UpdateInfo.old_name,
 				updated_at: UpdateInfo.updated_at
 			});
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
+
+	async UpdateEmail ( req, res ) {
+		const { change_token } = req.params;
+		const { new_email } = req.body;
+
+		await AuthHelper.verifyTokenExpiresDate( );
+
+		const TokenInfo = await AuthHelper.thisEmailChangeTokenExists( change_token );
+
+		const ClientInfo = await ClientHelper.existEmail( TokenInfo.email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "your email is invalid" });
+
+		if ( new_email === ClientInfo.email )
+			return await ResponseHelper.badRequest( res, { error:  "email is the same as the account" });
+
+		const UpdateInfo = await repository.UpdateEmailAndCreateLog( ClientInfo.email, new_email );
+
+		if ( UpdateInfo ) {
+
+			await LoginHelper.disconnectAllSessions( ClientInfo.email );
+
+			await AuthHelper.deleteToken( change_token );
+
+			return await ResponseHelper.success( res, { 
+				success:  "email changed", 
+				old_email: UpdateInfo.new_email, 
+				new_email: UpdateInfo.old_email,
+				updated_at: UpdateInfo.updated_at
+			});
+
+		}
 
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}

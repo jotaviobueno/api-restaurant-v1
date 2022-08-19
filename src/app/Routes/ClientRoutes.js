@@ -20,6 +20,7 @@ ClientRoutes.post( "/login-cpf", ClientRequest.ValidateLoginCpf, ClientControlle
 ClientRoutes.get( "/my-account", ClientRequest.ValidateSeeAccount, ClientController.SeeAccount );
 ClientRoutes.delete( "/my-account/delete", ClientRequest.ValidateDelete, ClientController.Delete );
 ClientRoutes.patch( "/my-account/update-name", UpdateRequest.ValidateUpdateName, UpdateController.UpdateName );
+ClientRoutes.patch( "/update-email/:change_token", UpdateRequest.ValidateUpdateEmail, UpdateController.UpdateEmail );
 
 // Auth
 ClientRoutes.get( "/my-account/get-token/change-email", AuthRequest.ValidateGetTokenChangeEmail, AuthController.generationTokenToChangeEmail );
