@@ -13,6 +13,15 @@ class LoginHelper {
 			await LoginModel.updateMany({ disconnected_in: new Date() });
 
 	}
+
+	async existToken ( session_token ) {
+		const findToken = await LoginModel.findOne({ session_token: session_token, disconnected_in: null });
+
+		if ( findToken === null )
+			return false;
+        
+		return findToken;
+	}
 }
 
 export default new LoginHelper;

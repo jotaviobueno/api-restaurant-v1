@@ -29,7 +29,6 @@ class repository {
 			disconnected_in: null
 		});
 	}
-
 }
 
 export default new repository;

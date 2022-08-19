@@ -60,4 +60,4 @@ class ClientRequest {
 	}
 }
 
-export default new ClientRequest();
+export default new ClientRequest;

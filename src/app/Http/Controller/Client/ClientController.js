@@ -48,11 +48,11 @@ class ClientController {
 		const sessionInfo = await repository.CreateSession( email );
 
 		if ( sessionInfo )
-			return await ResponseHelper.created( res, { 
+			return await ResponseHelper.success( res, { 
 				success:  "login made", 
 				email: sessionInfo.email,
 				name: ClientInfo.name,
-				session_id: sessionInfo.session_token,
+				session_token: sessionInfo.session_token,
 				login_made_in: sessionInfo.login_made_in
 		
 			});
@@ -76,11 +76,11 @@ class ClientController {
 		const sessionInfo = await repository.CreateSession( ClientInfo.email );
 
 		if ( sessionInfo )
-			return await ResponseHelper.created( res, { 
+			return await ResponseHelper.success( res, { 
 				success:  "login made", 
 				email: sessionInfo.email, 
 				name: ClientInfo.name,
-				session_id: sessionInfo.session_token,
+				session_token: sessionInfo.session_token,
 				login_made_in: sessionInfo.login_made_in
 		
 			});
