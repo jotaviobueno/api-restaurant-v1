@@ -88,6 +88,25 @@ class ClientController {
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
 
+	async SeeAccount ( req, res ) {
+		const { session_token } = req.headers;
+
+		const SessionInfo = await LoginHelper.existToken( session_token );
+
+		if (! SessionInfo )
+			return await ResponseHelper.badRequest( res, { error:  "your session is invalid" });
+
+		const ClientInfo = await repository.existEmail( SessionInfo.email );
+
+		if ( ClientInfo )
+			return await ResponseHelper.success( res, { 
+				success:  "account info", 
+				account_info: ClientInfo
+		
+			});
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
 }
 
 export default new ClientController;
