@@ -9,7 +9,7 @@ const LogUpdateModel = mongoose.model( "LogUpdate", {
 	new_email: { type: String },
 	old_email: { type: String },
 	update_password: { type: Date },
-	updated_at: { type: Date, required: true }
+	updated_at: { type: Date }
     
 });
 

@@ -47,6 +47,31 @@ class UpdateRequest {
 
 		await next();
 	}
+
+	async ValidateUpdatePasswordWithoutToken ( req, res, next ) {
+
+		const HeadersValidator = yup.object().shape({
+			session_token: yup.string().required()
+		});
+
+
+		const BodyValidator = yup.object().shape({
+			new_password: yup.string().min(8).max(16).required(),
+			password: yup.string().required(),
+		});
+
+
+		try {
+			await BodyValidator.validate(req.body);
+			await HeadersValidator.validate(req.headers);
+
+		} catch (err) {
+			return res.status(422).json({errors: err.errors});
+
+		}
+
+		await next();
+	}
 }
 
 export default new UpdateRequest;
