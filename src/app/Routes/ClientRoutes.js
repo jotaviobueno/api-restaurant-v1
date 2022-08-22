@@ -24,6 +24,7 @@ ClientRoutes.patch( "/my-account/update-password", UpdateRequest.ValidateUpdateP
 
 
 ClientRoutes.get( "/get-token/change-password", AuthRequest.ValidateGetTokenToChangePassword, AuthController.GenerationTokenToChangePassword );
+ClientRoutes.patch( "/update-password/:change_token", UpdateController.ChangePasswordWithToken );
 // Auth
-ClientRoutes.get( "/my-account/get-token/change-email", AuthRequest.ValidateGetTokenChangeEmail, AuthController.generationTokenToChangeEmail );
+ClientRoutes.get( "/get-token/change-email", AuthRequest.ValidateGetTokenChangeEmail, AuthController.generationTokenToChangeEmail );
 ClientRoutes.patch( "/update-email/:change_token", UpdateRequest.ValidateUpdateEmail, UpdateController.UpdateEmail );

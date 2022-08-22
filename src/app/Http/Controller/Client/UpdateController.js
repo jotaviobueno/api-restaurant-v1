@@ -51,6 +51,9 @@ class UpdateController {
 
 		const TokenInfo = await AuthHelper.thisEmailChangeTokenExists( change_token );
 
+		if (! TokenInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "change token is invalid" });
+
 		const ClientInfo = await ClientHelper.existEmail( TokenInfo.email );
 
 		if (! ClientInfo )
@@ -110,6 +113,45 @@ class UpdateController {
 				update_password: UpdateInfo.update_password
 			});
 
+		}
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
+
+	
+	async ChangePasswordWithToken ( req, res ) {
+		const { change_token } = req.params;
+		const { new_password } = req.body;
+
+		const TokenInfo = await AuthHelper.thisPasswordChangeTokenExists( change_token );
+
+		if (! TokenInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "change token is invalid" });
+
+		const ClientInfo = await ClientHelper.existEmail( TokenInfo.email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "your email is invalid" });
+
+		if ( ClientInfo.email != TokenInfo.email )
+			return await ResponseHelper.badRequest( res, { error:  "email is the same as the account" });
+
+		if ( await ClientHelper.comparePassword( new_password, ClientInfo.password ) )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "password identical to the account" });
+		
+		const UpdateInfo = await repository.UpdatePasswordAndCreateLog( ClientInfo.email, new_password );
+
+		if ( UpdateInfo ) {
+	
+			await LoginHelper.disconnectAllSessions( ClientInfo.email );
+	
+			await AuthHelper.deletePasswordChangeToken( change_token );
+
+			return await ResponseHelper.success( res, { 
+				success:  "password changed, all sessions disconnected", 
+				update_password: UpdateInfo.update_password
+			});
+	
 		}
 
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });

@@ -1,6 +1,6 @@
 // Models
 import TokenChangeEmailModel from "../../Models/Client/Log/AuthTokens/TokenChangeEmailModel.js";
-import TokensChangePaswordModel from "../../Models/Client/Log/AuthTokens/TokenChangePasswordModel.js";
+import TokensChangePasswordModel from "../../Models/Client/Log/AuthTokens/TokenChangePasswordModel.js";
 
 // Settings
 const DeleteTokensWhenHave = 3;
@@ -10,6 +10,15 @@ class AuthHelper {
 	// 
 	// TokenChangeEmailModel
 	// 
+
+	async thisEmailChangeTokenExists ( change_token ) {
+		const findToken = await TokenChangeEmailModel.findOne({ token: change_token, status: null });
+
+		if ( findToken === null )
+			return false;
+
+		return findToken;
+	}
 
 	async CheckEmailChangeTokenExpirationDate (  ) {
 		const findAllTokens = await TokenChangeEmailModel.find({ status: null });
@@ -29,15 +38,6 @@ class AuthHelper {
 
 	}
 
-	async thisEmailChangeTokenExists ( change_token ) {
-		const findToken = await TokenChangeEmailModel.findOne({ token: change_token, status: null });
-
-		if ( findToken === null )
-			return false;
-
-		return findToken;
-	}
-
 	async DeletingOldEmailChangeTokens ( email ) {
 		const findAllTokens = await TokenChangeEmailModel.find({ email: email, status: false }); 
 
@@ -53,32 +53,42 @@ class AuthHelper {
 	// TokensChangePaswordModel
 	// 
 
+	async thisPasswordChangeTokenExists ( change_token ) {
+		const findToken = await TokensChangePasswordModel.findOne({ token: change_token, status: null });
+		console.log(findToken);
+
+		if ( findToken === null )
+			return false;
+
+		return findToken;
+	}
+
 	async CheckingThePasswordTokenExpirationDate (  ) {
-		const findAllTokens = await TokensChangePaswordModel.find({ status: null });
+		const findAllTokens = await TokensChangePasswordModel.find({ status: null });
 
 		findAllTokens.forEach( async ( tokens ) => {
 			if ( new Date() >= tokens.token_expires_in )
-				await TokensChangePaswordModel.findOneAndUpdate({ token: tokens.token }, {status: false });
+				await TokensChangePasswordModel.findOneAndUpdate({ token: tokens.token }, {status: false });
 		});
 	}
 
 	async CheckUserPasswordChangeTokenAmount ( email ) {
-		const findAllUserToken = await TokensChangePaswordModel.find({ email: email, status: null });
+		const findAllUserToken = await TokensChangePasswordModel.find({ email: email, status: null });
 
 		if ( findAllUserToken.length >= 1 )
-			await TokensChangePaswordModel.updateMany({ email: email }, { status: false });
+			await TokensChangePasswordModel.updateMany({ email: email }, { status: false });
 
 	}
 
 	async DeletingOldPasswordChangeTokens ( email ) {
-		const findAllTokens = await TokensChangePaswordModel.find({ email: email, status: false }); 
+		const findAllTokens = await TokensChangePasswordModel.find({ email: email, status: false }); 
 
 		if ( findAllTokens.length >= DeleteTokensWhenHave )
-			await TokensChangePaswordModel.deleteMany( );
+			await TokensChangePasswordModel.deleteMany( );
 	}
 
 	async deletePasswordChangeToken ( token ) {
-		await TokensChangePaswordModel.findOneAndUpdate({ token: token, status: null }, { status: true });
+		await TokensChangePasswordModel.findOneAndUpdate({ token: token, status: null }, { status: true });
 	} 
 	
 }
