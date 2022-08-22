@@ -2,18 +2,17 @@
 import TokenChangeEmailModel from "../../Models/Client/Log/AuthTokens/TokenChangeEmailModel.js";
 
 class AuthHelper {
-	async verifyTokenExpiresDate (  ) {
+	async CheckEmailChangeTokenExpirationDate (  ) {
 		const findAllTokens = await TokenChangeEmailModel.find({ status: null });
 
 		findAllTokens.forEach( async ( tokens ) => {
 			if ( new Date() >= tokens.token_expires_in )
 				await TokenChangeEmailModel.findOneAndUpdate({ token: tokens.token }, {status: false });
-
 		});
-
+		
 	}
 
-	async checkTheAmountOfUserToken ( email ) {
+	async CheckUserEmailChangeTokenAmount ( email ) {
 		const findAllUserToken = await TokenChangeEmailModel.find({ email: email, status: null });
 
 		if ( findAllUserToken.length >= 1 )
@@ -30,9 +29,11 @@ class AuthHelper {
 		return findToken;
 	}
 
-	async deleteToken ( token ) {
+	async deleteEmailToken ( token ) {
 		await TokenChangeEmailModel.findOneAndUpdate({ token: token, status: null }, { status: true });
 	}
+
+	
 }
 
 export default new AuthHelper;

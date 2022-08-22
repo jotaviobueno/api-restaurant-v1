@@ -65,7 +65,7 @@ class UpdateController {
 
 			await LoginHelper.disconnectAllSessions( ClientInfo.email );
 
-			await AuthHelper.deleteToken( change_token );
+			await AuthHelper.deleteEmailToken( change_token );
 
 			return await ResponseHelper.success( res, { 
 				success:  "email changed, all sessions disconnected", 

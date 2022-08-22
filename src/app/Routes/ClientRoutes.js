@@ -22,6 +22,8 @@ ClientRoutes.delete( "/my-account/delete", ClientRequest.ValidateDelete, ClientC
 ClientRoutes.patch( "/my-account/update-name", UpdateRequest.ValidateUpdateName, UpdateController.UpdateName );
 ClientRoutes.patch( "/my-account/update-password", UpdateRequest.ValidateUpdatePasswordWithoutToken, UpdateController.UpdatePasswordWithoutToken );
 
+
+ClientRoutes.get( "/get-token/change-password", AuthRequest.ValidateGetTokenToChangePassword, AuthController.GenerationTokenToChangePassword );
 // Auth
 ClientRoutes.get( "/my-account/get-token/change-email", AuthRequest.ValidateGetTokenChangeEmail, AuthController.generationTokenToChangeEmail );
 ClientRoutes.patch( "/update-email/:change_token", UpdateRequest.ValidateUpdateEmail, UpdateController.UpdateEmail );

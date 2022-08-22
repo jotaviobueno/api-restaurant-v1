@@ -13,7 +13,7 @@ class AuthController {
 		const { session_token } = req.headers;
 		const { password } = req.body;
 
-		await AuthHelper.verifyTokenExpiresDate( );
+		await AuthHelper.CheckEmailChangeTokenExpirationDate( );
 
 		const SessionInfo = await LoginHelper.existToken( session_token );
 
@@ -25,7 +25,7 @@ class AuthController {
 		if (! ClientInfo )
 			return await ResponseHelper.unprocessableEntity( res, { error:  "your email is invalid" });
 
-		await AuthHelper.checkTheAmountOfUserToken( ClientInfo.email );
+		await AuthHelper.CheckUserEmailChangeTokenAmount( ClientInfo.email );
 
 		if (! await ClientHelper.comparePassword( password, ClientInfo.password ) )
 			return await ResponseHelper.notAuthorized( res, { error:  "not authorized" });
@@ -44,6 +44,28 @@ class AuthController {
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
 
+	async GenerationTokenToChangePassword ( req, res ) {
+		const { email } = req.body;
+	
+		const ClientInfo = await ClientHelper.existEmail( email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error:  "your email is invalid" });
+
+		const TokenInfo = await repository.CreateTokenToChangePassword( ClientInfo.email );
+
+		if ( TokenInfo )
+			return await ResponseHelper.created( res, { 
+				success:  "token created", 
+				token_info: {
+					change_token: TokenInfo.token,
+					token_expires_in: TokenInfo.token_expires_in
+				}
+			});
+		
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+
+	}
 }
 
 export default new AuthController;
