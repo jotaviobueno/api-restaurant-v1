@@ -25,6 +25,8 @@ class AuthController {
 		if (! ClientInfo )
 			return await ResponseHelper.unprocessableEntity( res, { error:  "your email is invalid" });
 
+		await AuthHelper.DeletingOldEmailChangeTokens( ClientInfo.email );
+
 		await AuthHelper.CheckUserEmailChangeTokenAmount( ClientInfo.email );
 
 		if (! await ClientHelper.comparePassword( password, ClientInfo.password ) )
@@ -47,10 +49,16 @@ class AuthController {
 	async GenerationTokenToChangePassword ( req, res ) {
 		const { email } = req.body;
 	
+		await AuthHelper.CheckingThePasswordTokenExpirationDate( );
+
 		const ClientInfo = await ClientHelper.existEmail( email );
 
 		if (! ClientInfo )
 			return await ResponseHelper.unprocessableEntity( res, { error:  "your email is invalid" });
+
+		await AuthHelper.DeletingOldPasswordChangeTokens( ClientInfo.email );
+
+		await AuthHelper.CheckUserPasswordChangeTokenAmount( ClientInfo.email );
 
 		const TokenInfo = await repository.CreateTokenToChangePassword( ClientInfo.email );
 
