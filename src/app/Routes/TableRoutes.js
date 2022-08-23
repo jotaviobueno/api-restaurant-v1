@@ -11,4 +11,4 @@ import TableController from "../http/Controller/Table/TableController.js";
 import TableRequst from "../http/Request/Table/TableRequest.js";
 
 TableRoutes.post( "/create-table", TableRequst.ValidateCreateTable, TableController.CreateTable );
-TableRoutes.delete( "/table/delete/:table_id", TableController.deleteTable );
+TableRoutes.delete( "/table/delete/:table_id", TableRequst.ValidateDeleteTable, TableController.deleteTable );
