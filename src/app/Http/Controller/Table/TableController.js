@@ -101,6 +101,47 @@ class TebleController {
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
 
+	async Reserve ( req, res ) {
+		const { session_token } = req.headers;
+		const { table_id } = req.params;
+		const { date } = req.body;
+		const dateString = new Date( date );
+
+		const SessionInfo = await LoginHelper.existToken( session_token );
+
+		if (! SessionInfo )
+			return await ResponseHelper.badRequest( res, { error:  "your session is invalid" });
+
+		const ClientInfo = await ClientHelper.existEmail( SessionInfo.email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error: "your email is invalid" });
+
+		const TableInfo = await TableHelper.existTable( table_id );
+
+		if (! TableInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error: "table id is invalid" });
+
+		if ( new Date() >= dateString )
+			return await ResponseHelper.unprocessableEntity( res, { error: "date its > new Date" });
+		
+		const ReserveInfo =  await repository.CreateReserveAndDeactivationToken( ClientInfo.name, ClientInfo.email, ClientInfo.cpf, dateString, table_id );
+
+		if ( ReserveInfo )
+			return await ResponseHelper.success( res, { 
+				success: "reserve created",
+				email: ReserveInfo.email,
+				name: ReserveInfo.name,
+				reserved_in: ReserveInfo.date,
+				expires_in: ReserveInfo.expires_in,
+				table_id: ReserveInfo.table_id,
+				reserve_id: ReserveInfo._id
+		
+			});
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
+
 }
 
 export default new TebleController;

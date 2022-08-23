@@ -1,6 +1,7 @@
 // Models
 import TableModel from "../../../Models/Table/TableModel.js";
 import DeletionHistoryModel from "../../../Models/Table/Log/DeletionHistoryModel.js";
+import ReserveModel from "../../../Models/Table/ReserveModel.js";
 
 class repository {
 
@@ -39,6 +40,21 @@ class repository {
 		return await TableModel.find({ deleted_at: null }).select({ __v: 0, booked_by: { email: 0, name: 0, cpf: 0} });
 	}
 
+	async CreateReserveAndDeactivationToken ( name, email, cpf, date, table_id ) {
+		
+		await TableModel.findOneAndUpdate({ _id: table_id, deleted_at: null }, 
+			{ updated_at: new Date(), reserved: true, booked_by: { email: email, name: name, cpf: cpf } });
+
+		return await ReserveModel.create({
+			email: email,
+			name: name,
+			cpf: cpf,
+			reserved_in: date,
+			expires_in: date.setHours( date.getHours() + 1),
+			table_id: table_id,
+		});
+
+	}
 }
 
 export default new repository;
