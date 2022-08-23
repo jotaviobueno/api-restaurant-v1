@@ -2,11 +2,12 @@
 import express from "express";
 
 // Route Profix
-export const ArticleRoutes = express.Router();
+export const TableRoutes = express.Router();
 
 // Controller
 import TableController from "../http/Controller/Table/TableController.js";
 
 // Request/ Validators/ Middlawares
 
-ArticleRoutes.post( "/create-article", TableController.CreateTable );
+TableRoutes.post( "/create-table", TableController.CreateTable );
+TableRoutes.delete( "/table/delete/:table_id", TableController.deleteTable );
