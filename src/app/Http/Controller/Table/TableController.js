@@ -47,7 +47,7 @@ class TebleController {
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
 
-	async deleteTable ( req, res ) {
+	async  deleteTable ( req, res ) {
 		const { session_token } = req.headers;
 		const { table_id } = req.params;
 
@@ -77,6 +77,27 @@ class TebleController {
 			
 			});
 
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
+
+	async FindAll ( req, res ) {
+		const { session_token } = req.headers;
+
+		const SessionInfo = await LoginHelper.existToken( session_token );
+
+		if (! SessionInfo )
+			return await ResponseHelper.badRequest( res, { error:  "your session is invalid" });
+
+		const ClientInfo = await ClientHelper.existEmail( SessionInfo.email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error: "your email is invalid" });
+
+		const FindAllInfo = await repository.FindAllTables();
+
+		if ( FindAllInfo )
+			return await ResponseHelper.success( res, { total: FindAllInfo.length, total_table: FindAllInfo });
+			
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
 
