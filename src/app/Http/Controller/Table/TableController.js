@@ -8,7 +8,7 @@ import ResponseHelper from "../../../Helper/ResponseHelper.js";
 import TableHelper from "../../../Helper/Table/TableHelper.js";
 
 // Settings
-const RoleNumber = 10;
+import { RoleNumber } from "../../../../config/Settings.js";
 
 class TebleController {
     
