@@ -1,5 +1,6 @@
 // Models
 import TableModel from "../../Models/Table/TableModel.js";
+import ReserveModel from "../../Models/Table/ReserveModel.js";
 
 class TableHelper {
     
@@ -12,6 +13,26 @@ class TableHelper {
 		return findTable;
 	}
 
+	async verifyDateExpires ( ) {
+		const findReserve = await ReserveModel.find();
+
+		findReserve.forEach( async ( reserves ) => {
+			
+			if ( new Date() >= reserves.expires_in ) {
+				await TableModel.findOneAndUpdate({ _id: reserves.table_id }, { booked_by: { email: null, name: null, cpf: null }, 
+					reserved: false, 
+					updated_at: new Date() 
+				});
+
+				await ReserveModel.findOneAndDelete({ table_id: reserves.table_id }, { table_id: reserves.table_id } );
+			}
+		});
+	}
+
+	async HaveReservation ( email ) {
+		if ( await ReserveModel.findOne({ email: email }) === null )
+			return false;
+	}
 }
 
 export default new TableHelper;

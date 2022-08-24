@@ -37,7 +37,7 @@ class repository {
 	}
 
 	async FindAllTables ( ) {
-		return await TableModel.find({ deleted_at: null }).select({ __v: 0, booked_by: { email: 0, name: 0, cpf: 0} });
+		return await TableModel.find({ reserved: false, deleted_at: null }).select({ created_by: 0, __v: 0, booked_by: { email: 0, name: 0, cpf: 0} });
 	}
 
 	async CreateReserveAndDeactivationToken ( name, email, cpf, date, table_id ) {

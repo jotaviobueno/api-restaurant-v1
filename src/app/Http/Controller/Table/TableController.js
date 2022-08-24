@@ -117,10 +117,16 @@ class TebleController {
 		if (! ClientInfo )
 			return await ResponseHelper.unprocessableEntity( res, { error: "your email is invalid" });
 
+		if ( await TableHelper.HaveReservation( ClientInfo.email ) != false )
+			return await ResponseHelper.unprocessableEntity( res, { error: "you already have a reservation" });
+
 		const TableInfo = await TableHelper.existTable( table_id );
 
-		if (! TableInfo )
+		if (! TableInfo ) {
+			await TableHelper.verifyDateExpires();
+
 			return await ResponseHelper.unprocessableEntity( res, { error: "table id is invalid" });
+		}
 
 		if ( new Date() >= dateString )
 			return await ResponseHelper.unprocessableEntity( res, { error: "date its > new Date" });
