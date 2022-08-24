@@ -13,6 +13,10 @@ class repository {
 			deleted_at: null
 		});
 	}
+
+	async FindAll ( ) {
+		return await DishModel.find({ deleted_at: null }).select({ __v: 0, created_at: 0, update_at: 0, deleted_at: 0 });
+	}
 }
 
 export default new repository;

@@ -9,3 +9,4 @@ import DishController from "../Http/Controller/Dish/DishController.js";
 // Request/ Validators/ Middlawares
 
 DishRoutes.post( "/create/dish", DishController.StorageDish );
+DishRoutes.get( "/dishs", DishController.FindAllDish );

@@ -43,6 +43,19 @@ class DishController {
 
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
+
+	async FindAllDish ( req, res ) {
+		
+		const FindInfo = await repository.FindAll();
+
+		if ( FindInfo )
+			return await ResponseHelper.created( res, { 
+				success: "All Dishs",
+				all_dish: FindInfo
+			});
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
 }
 
 export default new DishController;
