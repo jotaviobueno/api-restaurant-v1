@@ -7,6 +7,7 @@ export const DishRoutes = express.Router();
 import DishController from "../Http/Controller/Dish/DishController.js";
 
 // Request/ Validators/ Middlawares
+import DishRequest from "../Http/Request/Dish/DishRequest.js";
 
-DishRoutes.post( "/create/dish", DishController.StorageDish );
+DishRoutes.post( "/create/dish", DishRequest.ValidateStorageDish, DishController.StorageDish );
 DishRoutes.get( "/dishs", DishController.FindAllDish );
