@@ -15,3 +15,4 @@ DishRoutes.post( "/create/dish", DishRequest.ValidateStorageDish, DishController
 DishRoutes.get( "/dishs", DishController.FindAllDish );
 DishRoutes.delete( "/dish/delete", DishRequest.ValidateDeleteDish, DishController.Delete );
 DishRoutes.patch( "/dish/update-name", UpdateRequest.ValidateUpdateDishName, UpdateController.UpdateDishName);
+DishRoutes.patch( "/dish/update-body", UpdateRequest.ValidateUpdateDishBody, UpdateController.UpdateDishBody);
