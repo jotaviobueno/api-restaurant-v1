@@ -5,12 +5,16 @@ import ReserveModel from "../../Models/Table/ReserveModel.js";
 class TableHelper {
     
 	async existTable ( table_id ) {
-		const findTable = await TableModel.findOne({ _id: table_id, deleted_at: null, reserved: false });
+		try {
+			const findTable = await TableModel.findOne({ _id: table_id, deleted_at: null, reserved: false });
 
-		if ( findTable === null )
-			return false;
+			if ( findTable === null )
+				return false;
         
-		return findTable;
+			return findTable;
+		} catch (e) {
+			return false;
+		}
 	}
 
 	async verifyDateExpires ( ) {

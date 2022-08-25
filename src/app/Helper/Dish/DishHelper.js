@@ -4,12 +4,19 @@ import DishModel from "../../Models/Dish/DishModel.js";
 class DishHelper {
 
 	async existDish ( dish_id ) {
-		const findDish = await DishModel.findOne({ _id: dish_id, deleted_at: null });
+		try {
+			const findDish = await DishModel.findOne({ _id: dish_id, deleted_at: null });
 
-		if ( findDish === null )
-			return false;
+			console.log(findDish);
+
+			if ( findDish === null )
+				return false;
         
-		return findDish;
+			return findDish;
+
+		} catch (e) {
+			return false;
+		}
 	}
 }
 
