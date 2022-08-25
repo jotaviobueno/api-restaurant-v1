@@ -1,5 +1,6 @@
 // Models
 import DishModel from "../../../Models/Dish/DishModel.js";
+import DeletionHistoryModel from "../../../models/Dish/log/DeletionHistoryModel.js";
 
 class repository {
 
@@ -16,6 +17,16 @@ class repository {
 
 	async FindAll ( ) {
 		return await DishModel.find({ deleted_at: null }).select({ __v: 0, created_at: 0, update_at: 0, deleted_at: 0 });
+	}
+
+	async DeleteDishAndCreateLog (_id, email ) {
+		await DishModel.findOneAndUpdate({ _id: _id, deleted_at: null }, { deleted_at: new Date(), updated_at: new Date() });
+
+		return await DeletionHistoryModel.create({
+			deleted_by: email,
+			dish_id: _id,
+			deleted_at: new Date()
+		});
 	}
 }
 

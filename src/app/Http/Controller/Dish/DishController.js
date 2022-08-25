@@ -5,6 +5,7 @@ import repository from "../../Repository/dish/DishRepository.js";
 import ClientHelper from "../../../Helper/Client/ClientHelper.js";
 import LoginHelper from "../../../Helper/Client/LoginHelper.js";
 import ResponseHelper from "../../../Helper/ResponseHelper.js";
+import DishHelper from "../../../Helper/Dish/DishHelper.js";
 
 // Settings
 import { RoleNumber } from "../../../../config/Settings.js";
@@ -52,6 +53,38 @@ class DishController {
 			return await ResponseHelper.created( res, { 
 				success: "All Dishs",
 				all_dish: FindInfo
+			});
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
+
+	async Delete ( req, res ) {
+		const { session_token, dish_id } = req.headers;
+
+		const SessionInfo = await LoginHelper.existToken( session_token );
+
+		if (! SessionInfo )
+			return await ResponseHelper.badRequest( res, { error: "your session is invalid" });
+
+		const ClientInfo = await ClientHelper.existEmail( SessionInfo.email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error: "your email is invalid" });
+
+		if (! await DishHelper.existDish( dish_id ) )
+			return await ResponseHelper.unprocessableEntity( res, { error: "dish_id is invalid" });
+
+		if ( ClientInfo.role != RoleNumber )
+			return await ResponseHelper.notAuthorized( res, { error: "not authorized" });
+		
+		const DeletedInformation = await repository.DeleteDishAndCreateLog( dish_id, ClientInfo.email );
+
+		if ( DeletedInformation )
+			return await ResponseHelper.success( res, { 
+				success: "dish deleted",
+				deleted_by: DeletedInformation.deleted_by,
+				dish_id: DeletedInformation.dish_id,
+				deleted_at: DeletedInformation.deleted_at
 			});
 
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
