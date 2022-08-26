@@ -43,6 +43,27 @@ class UpdateController {
 		
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
+
+	async FindAllAddress ( req, res ) {
+		const { session_token } = req.headers;
+
+		const SessionInfo = await LoginHelper.existToken( session_token );
+
+		if (! SessionInfo )
+			return await ResponseHelper.badRequest( res, { error: "your session is invalid" });
+
+		const ClientInfo = await ClientHelper.existEmail( SessionInfo.email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error: "your email is invalid" });
+	
+		const AddressInformation = await repository.FindAllAddress( ClientInfo.email );
+
+		if ( AddressInformation )
+			return await ResponseHelper.success( res, AddressInformation );
+
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
 }
 
 export default new UpdateController;

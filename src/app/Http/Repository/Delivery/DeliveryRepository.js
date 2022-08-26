@@ -15,9 +15,14 @@ class repository {
 			addressInfo: {
 				address: address,
 				id: nanoid(),
-				created_at: new Date()
+				created_at: new Date(),
+				deleted_at: null
 			},
 		});
+	}
+
+	async FindAllAddress ( email ) {
+		return await AddresModel.find({ email: email, deleted_at: null }).select({ __v: 0, _id: 0 });
 	}
 }
 

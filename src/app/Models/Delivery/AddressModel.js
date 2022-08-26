@@ -8,7 +8,8 @@ const AddresModel = mongoose.model( "address", {
 	addressInfo: {
 		address: String,
 		id: String,
-		created_at: { type: Date },
+		created_at: { type: Date, required: true },
+		deleted_at: { type: Date }
 	},
 
     
