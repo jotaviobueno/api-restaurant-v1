@@ -5,12 +5,11 @@ const AddresModel = mongoose.model( "address", {
 
 	name: { type: String, required: true },
 	email: { type: String, required: true },
-	addressInfo: {
-		address: String,
-		id: String,
-		created_at: { type: Date, required: true },
-		deleted_at: { type: Date }
-	},
+	id: { type: String },
+	address: { type: String },
+	created_at: { type: Date, required: true },
+	deleted_at: { type: Date },
+	updated_at: { type: Date, required: true }
 
     
 });

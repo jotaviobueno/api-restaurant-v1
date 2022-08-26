@@ -11,4 +11,5 @@ import UpdateController from "../Http/Controller/Delivery/DeliveryController.js"
 import DeliveryRequest from "../http/Request/Delivery/DeliveryRequest.js";
 
 DeliveryRoutes.post( "/add/andress", DeliveryRequest.ValidateAddAnddress, UpdateController.AddAnddress );
-DeliveryRoutes.post( "/my-andress", DeliveryRequest.ValidateFindAllAddress, UpdateController.FindAllAddress );
+DeliveryRoutes.get( "/my-andress", DeliveryRequest.ValidateFindAllAddress, UpdateController.FindAllAddress );
+DeliveryRoutes.delete( "/andress/delete", DeliveryRequest.ValidateDelete, UpdateController.Delete );

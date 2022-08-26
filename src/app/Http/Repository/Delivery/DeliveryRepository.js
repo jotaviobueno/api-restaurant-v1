@@ -12,17 +12,20 @@ class repository {
 		return await AddresModel.create({
 			name: name,
 			email: email,
-			addressInfo: {
-				address: address,
-				id: nanoid(),
-				created_at: new Date(),
-				deleted_at: null
-			},
+			id: nanoid(),
+			address: address,
+			created_at: new Date(),
+			deleted_at: null,
+			updated_at: new Date()
 		});
 	}
 
 	async FindAllAddress ( email ) {
 		return await AddresModel.find({ email: email, deleted_at: null }).select({ __v: 0, _id: 0 });
+	}
+
+	async DeleteAddress ( id, email ) {
+		return await AddresModel.findOneAndUpdate({ id: id, email: email, deleted_at: null }, { deleted_at: new Date(), updated_at: new Date() }).select({ __v: 0, _id: 0 });
 	}
 }
 

@@ -5,7 +5,7 @@ import repository from "../../Repository/Delivery/DeliveryRepository.js";
 import ClientHelper from "../../../Helper/Client/ClientHelper.js";
 import LoginHelper from "../../../Helper/Client/LoginHelper.js";
 import ResponseHelper from "../../../Helper/ResponseHelper.js";
-import UpdateHelper from "../../../Helper/Delivery/UpdateHelper.js";
+import DeliveryHelper from "../../../Helper/Delivery/DeliveryHelper.js";
 
 class UpdateController {
 
@@ -24,7 +24,7 @@ class UpdateController {
 		if (! ClientInfo )
 			return await ResponseHelper.unprocessableEntity( res, { error: "your email is invalid" });
 
-		if (! await UpdateHelper.NumberOfAddresses( ClientInfo.email ) )
+		if (! await DeliveryHelper.NumberOfAddresses( ClientInfo.email ) )
 			return await ResponseHelper.unprocessableEntity( res, { error: "it was not possible to register the address because you already have the maximum level of registered addresses" });
 
 		if ( number <= 0 )
@@ -36,9 +36,9 @@ class UpdateController {
 			return await ResponseHelper.success( res, {
 				name: addressInformation.name,
 				email: addressInformation.email,
-				address: addressInformation.addressInfo.address,
-				address_id: addressInformation.addressInfo.id,
-				created_at: addressInformation.addressInfo.created_at
+				address: addressInformation.address,
+				address_id: addressInformation.id,
+				created_at: addressInformation.created_at
 			});
 		
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
@@ -63,6 +63,44 @@ class UpdateController {
 			return await ResponseHelper.success( res, AddressInformation );
 
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
+
+	async Delete ( req, res ) {
+		const { session_token } = req.headers;
+		const { address_id } = req.headers;
+
+		const SessionInfo = await LoginHelper.existToken( session_token );
+
+		if (! SessionInfo )
+			return await ResponseHelper.badRequest( res, { error: "your session is invalid" });
+
+		const ClientInfo = await ClientHelper.existEmail( SessionInfo.email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error: "your email is invalid" });
+
+		const AddressInformation = await DeliveryHelper.existAddressId( address_id );
+
+		if (! AddressInformation )
+			return await ResponseHelper.unprocessableEntity( res, { error: "AddressInformation is invalid" });
+
+		if ( AddressInformation.email !=  ClientInfo.email )
+			return await ResponseHelper.notAuthorized( res, { error: "not authorized" });
+
+		const InformationDeleted = await repository.DeleteAddress( AddressInformation.id, ClientInfo.email );
+
+		if ( InformationDeleted )
+			return await ResponseHelper.success( res, {
+				name: InformationDeleted.name,
+				email: InformationDeleted.email,
+				id: InformationDeleted.id,
+				address: InformationDeleted.address,
+				created_at: InformationDeleted.created_at,
+				deleted_at: new Date(),
+				updated_at: new Date(),
+			});
+
+		return await ResponseHelper.unprocessableEntity( res, { error: "unable to process request" });
 	}
 }
 

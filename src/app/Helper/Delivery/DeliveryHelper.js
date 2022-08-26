@@ -14,6 +14,15 @@ class UpdateHelper {
 
 		return true;
 	}
+	
+	async existAddressId ( id ) {
+		const findAddress = await AddresModel.findOne({ id: id, deleted_at: null });
+		
+		if ( findAddress === null )
+			return false;
+			
+		return findAddress;
+	}
 
 }
 
