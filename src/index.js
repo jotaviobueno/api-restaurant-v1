@@ -12,6 +12,7 @@ import {Connect} from "./config/MongooseConnect.js";
 import {ClientRoutes} from "./app/Routes/ClientRoutes.js";
 import {TableRoutes} from "./app/Routes/TableRoutes.js";
 import {DishRoutes} from "./app/Routes/DishRoutes.js";
+import {DeliveryRoutes} from "./app/Routes/DeliveryRoutes.js";
 
 // Config
 const app = express();
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use("/", ClientRoutes);
 app.use("/", TableRoutes);
 app.use("/", DishRoutes);
+app.use("/", DeliveryRoutes);
 
 if ( await Connect() ) {
 	app.listen( port, () => {

@@ -16,6 +16,7 @@ class repository {
 			password: await bcrypt.hash( password, 10 ),
 			cpf: cpf,
 			role: 0,
+			address: null,
 			created_at: new Date(),
 			updated_at: new Date(),
 			deleted_at: null 
