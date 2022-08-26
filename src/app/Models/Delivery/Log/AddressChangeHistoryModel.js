@@ -1,16 +1,15 @@
 // Dependencies
 import mongoose from "mongoose";
 
-const AddresModel = mongoose.model( "address", {
+const AddressChangeHistoryModel = mongoose.model( "AddressChangeHistory", {
 
 	name: { type: String, required: true },
 	email: { type: String, required: true },
 	id: { type: String },
-	address: { type: String },
-	created_at: { type: Date, required: true },
-	deleted_at: { type: Date },
+	OldAddress: { type: String },
+	NewAddress: { type: String },
 	updated_at: { type: Date, required: true }
 
 });
 
-export default AddresModel;
+export default AddressChangeHistoryModel;

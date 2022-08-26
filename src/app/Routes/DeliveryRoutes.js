@@ -5,11 +5,14 @@ import express from "express";
 export const DeliveryRoutes = express.Router();
 
 // Controller
-import UpdateController from "../Http/Controller/Delivery/DeliveryController.js";
+import DeliveryController from "../Http/Controller/Delivery/DeliveryController.js";
+import UpdateController from "../http/Controller/Delivery/UpdateController.js";
 
 // Request/ Validators/ Middlawares
 import DeliveryRequest from "../http/Request/Delivery/DeliveryRequest.js";
 
-DeliveryRoutes.post( "/add/andress", DeliveryRequest.ValidateAddAnddress, UpdateController.AddAnddress );
-DeliveryRoutes.get( "/my-andress", DeliveryRequest.ValidateFindAllAddress, UpdateController.FindAllAddress );
-DeliveryRoutes.delete( "/andress/delete", DeliveryRequest.ValidateDelete, UpdateController.Delete );
+DeliveryRoutes.post( "/add/address", DeliveryRequest.ValidateAddAnddress, DeliveryController.AddAnddress );
+DeliveryRoutes.get( "/my-address", DeliveryRequest.ValidateFindAllAddress, DeliveryController.FindAllAddress );
+DeliveryRoutes.delete( "/address/delete", DeliveryRequest.ValidateDelete, DeliveryController.Delete );
+
+DeliveryRoutes.patch( "/address/update", UpdateController.UpdateAddress );

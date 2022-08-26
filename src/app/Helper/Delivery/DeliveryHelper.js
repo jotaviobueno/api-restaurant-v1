@@ -7,7 +7,7 @@ import {TotalAddress} from "../../../config/Settings.js";
 class UpdateHelper {
     
 	async NumberOfAddresses ( email ) {
-		const findAllAddress = await AddresModel.find({ email: email });
+		const findAllAddress = await AddresModel.find({ email: email, deleted_at: null });
 
 		if ( findAllAddress.length >= TotalAddress)
 			return false;

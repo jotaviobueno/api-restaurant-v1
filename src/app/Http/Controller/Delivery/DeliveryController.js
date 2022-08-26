@@ -66,8 +66,7 @@ class UpdateController {
 	}
 
 	async Delete ( req, res ) {
-		const { session_token } = req.headers;
-		const { address_id } = req.headers;
+		const { session_token, address_id } = req.headers;
 
 		const SessionInfo = await LoginHelper.existToken( session_token );
 
@@ -84,7 +83,7 @@ class UpdateController {
 		if (! AddressInformation )
 			return await ResponseHelper.unprocessableEntity( res, { error: "AddressInformation is invalid" });
 
-		if ( AddressInformation.email !=  ClientInfo.email )
+		if ( AddressInformation.email != ClientInfo.email )
 			return await ResponseHelper.notAuthorized( res, { error: "not authorized" });
 
 		const InformationDeleted = await repository.DeleteAddress( AddressInformation.id, ClientInfo.email );
