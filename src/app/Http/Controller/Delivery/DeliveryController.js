@@ -65,7 +65,7 @@ class UpdateController {
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
 
-	async Delete ( req, res ) {
+	async DeleteAddress ( req, res ) {
 		const { session_token, address_id } = req.headers;
 
 		const SessionInfo = await LoginHelper.existToken( session_token );
