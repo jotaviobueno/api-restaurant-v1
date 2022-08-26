@@ -1,5 +1,5 @@
 // repository
-import repository from "../../Repository/Delivery/UpdateRepository.js";
+import repository from "../../Repository/Delivery/DeliveryRepository.js";
 
 // helpers
 import ClientHelper from "../../../Helper/Client/ClientHelper.js";
