@@ -29,6 +29,9 @@ class CardController {
 
 		if (! await CardHelper.ExistCard( Hidden ) )
 			return await ResponseHelper.unprocessableEntity( res, { error: "card already registered in the account" });
+	
+		if (! await CardHelper.varifyAmountOfCards( ClientInfo.email ) )
+			return await ResponseHelper.unprocessableEntity( res, { error: "maximum number of cards added to account" });
 
 		const CardStorageInformation = await repository.AddCard( name, ClientInfo.email, Hidden, cvv, expires_date );
 
