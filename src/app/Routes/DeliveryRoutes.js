@@ -8,6 +8,7 @@ export const DeliveryRoutes = express.Router();
 import DeliveryController from "../Http/Controller/Delivery/DeliveryController.js";
 import UpdateController from "../http/Controller/Delivery/UpdateController.js";
 import AddressController from "../http/Controller/Delivery/AddressController.js";
+import CardController from "../http/Controller/Delivery/CardController.js";
 
 // Request/ Validators/ Middlawares
 import DeliveryRequest from "../http/Request/Delivery/DeliveryRequest.js";
@@ -17,4 +18,8 @@ DeliveryRoutes.post( "/add/address", DeliveryRequest.ValidateAddAnddress, Addres
 DeliveryRoutes.get( "/my-address", DeliveryRequest.ValidateFindAllAddress, AddressController.FindAllAddress );
 DeliveryRoutes.delete( "/address/delete", DeliveryRequest.ValidateDelete, AddressController.DeleteAddress );
 
+DeliveryRoutes.post( "/my-account/add/card", CardController.AddCard );
+DeliveryRoutes.get( "/my-account/see-all/card", CardController.FindAllCard );
+
 DeliveryRoutes.patch( "/address/update", UpdateRequest.ValidateUpdateAddress, UpdateController.UpdateAddress );
+
