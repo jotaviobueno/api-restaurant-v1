@@ -25,6 +25,10 @@ class repository {
 		return await CardModel.find({ email: email, deleted_at: null }).select({ _id: 0, __v: 0, updated_at: 0, deleted_at: 0, cvv: 0 });
 	}
 
+	async deleteCard ( id ) {
+		return await CardModel.findOneAndDelete({ id: id, deleted_at: null }).select({ updated_at: 0, _id: 0, __v: 0, deleted_at:0, cvv: 0 });
+	}
+
 }
 
 export default new repository;

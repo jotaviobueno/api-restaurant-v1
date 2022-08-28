@@ -17,9 +17,9 @@ import UpdateRequest from "../http/Request/Delivery/UpdateRequest.js";
 DeliveryRoutes.post( "/add/address", DeliveryRequest.ValidateAddAnddress, AddressController.AddAddress );
 DeliveryRoutes.get( "/my-address", DeliveryRequest.ValidateFindAllAddress, AddressController.FindAllAddress );
 DeliveryRoutes.delete( "/address/delete", DeliveryRequest.ValidateDelete, AddressController.DeleteAddress );
+DeliveryRoutes.patch( "/address/update", UpdateRequest.ValidateUpdateAddress, UpdateController.UpdateAddress );
 
 DeliveryRoutes.post( "/my-account/add/card", CardController.AddCard );
 DeliveryRoutes.get( "/my-account/see-all/card", CardController.FindAllCard );
-
-DeliveryRoutes.patch( "/address/update", UpdateRequest.ValidateUpdateAddress, UpdateController.UpdateAddress );
+DeliveryRoutes.delete( "/my-account/card/delete", CardController.DeleteCard );
 

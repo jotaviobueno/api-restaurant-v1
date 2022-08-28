@@ -20,7 +20,18 @@ class CardHelper {
 			return false;
 
 		return true;
-	} 
+	}
+
+	async existCardId ( id ) {
+		const findCard = await CardModel.findOne({ id: id, deleted_at: null });
+
+		console.log(findCard);
+	
+		if ( findCard === null )
+			return false;
+
+		return findCard;
+	}
 }
 
 export default new CardHelper;

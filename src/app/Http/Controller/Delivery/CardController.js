@@ -68,6 +68,34 @@ class CardController {
 
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}
+
+	async DeleteCard ( req, res ) {
+		const { session_token, card_id } = req.headers;
+
+		const SessionInfo = await LoginHelper.existToken( session_token );
+
+		if (! SessionInfo )
+			return await ResponseHelper.badRequest( res, { error: "your session is invalid" });
+
+		const ClientInfo = await ClientHelper.existEmail( SessionInfo.email );
+
+		if (! ClientInfo )
+			return await ResponseHelper.unprocessableEntity( res, { error: "your email is invalid" });
+
+		const CardInformation = await CardHelper.existCardId( card_id );
+
+		if (! CardInformation )
+			return await ResponseHelper.unprocessableEntity( res, { error: "card id is invalid" });
+
+		const InformationDeleted = await repository.deleteCard( card_id );
+
+		if ( InformationDeleted )
+			return await ResponseHelper.success( res, {
+				InformationDeleted: {InformationDeleted}
+			});
+			
+		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
+	}
 }
 
 export default new CardController;
