@@ -11,14 +11,16 @@ import AddressController from "../http/Controller/Delivery/AddressController.js"
 import CardController from "../http/Controller/Delivery/CardController.js";
 
 // Request/ Validators/ Middlawares
-import DeliveryRequest from "../http/Request/Delivery/DeliveryRequest.js";
+import DeliveryRequest from "../Http/Request/Delivery/DeliveryRequest.js";
 import UpdateRequest from "../http/Request/Delivery/UpdateRequest.js";
+import AddressRequest from "../http/Request/Delivery/AddressRequest.js";
 
-DeliveryRoutes.post( "/create/request/c_id/:card_id/a_id/:address_id", DeliveryController.CreateRequest );
+DeliveryRoutes.post( "/create/request/a_id/:address_id", DeliveryRequest.ValidateCreateOrder, DeliveryController.CreateOrder );
+DeliveryRoutes.get( "/my-account/order/history", DeliveryRequest.ValidateSeeOrderHistory, DeliveryController.orderHistory );
 
-DeliveryRoutes.post( "/add/address", DeliveryRequest.ValidateAddAnddress, AddressController.AddAddress );
-DeliveryRoutes.get( "/my-address", DeliveryRequest.ValidateFindAllAddress, AddressController.FindAllAddress );
-DeliveryRoutes.delete( "/address/delete", DeliveryRequest.ValidateDelete, AddressController.DeleteAddress );
+DeliveryRoutes.post( "/add/address", AddressRequest.ValidateAddAnddress, AddressController.AddAddress );
+DeliveryRoutes.get( "/my-address", AddressRequest.ValidateFindAllAddress, AddressController.FindAllAddress );
+DeliveryRoutes.delete( "/address/delete", AddressRequest.ValidateDelete, AddressController.DeleteAddress );
 DeliveryRoutes.patch( "/address/update", UpdateRequest.ValidateUpdateAddress, UpdateController.UpdateAddress );
 
 DeliveryRoutes.post( "/my-account/add/card", CardController.AddCard );
