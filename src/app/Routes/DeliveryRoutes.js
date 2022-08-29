@@ -14,6 +14,7 @@ import CardController from "../http/Controller/Delivery/CardController.js";
 import DeliveryRequest from "../Http/Request/Delivery/DeliveryRequest.js";
 import UpdateRequest from "../http/Request/Delivery/UpdateRequest.js";
 import AddressRequest from "../http/Request/Delivery/AddressRequest.js";
+import CardRequest from "../http/request/Delivery/CardRequest.js";
 
 DeliveryRoutes.post( "/create/request/a_id/:address_id", DeliveryRequest.ValidateCreateOrder, DeliveryController.CreateOrder );
 DeliveryRoutes.get( "/my-account/order/history", DeliveryRequest.ValidateSeeOrderHistory, DeliveryController.orderHistory );
@@ -23,7 +24,7 @@ DeliveryRoutes.get( "/my-address", AddressRequest.ValidateFindAllAddress, Addres
 DeliveryRoutes.delete( "/address/delete", AddressRequest.ValidateDelete, AddressController.DeleteAddress );
 DeliveryRoutes.patch( "/address/update", UpdateRequest.ValidateUpdateAddress, UpdateController.UpdateAddress );
 
-DeliveryRoutes.post( "/my-account/add/card", CardController.AddCard );
-DeliveryRoutes.get( "/my-account/see-all/card", CardController.FindAllCard );
-DeliveryRoutes.delete( "/my-account/card/delete", CardController.DeleteCard );
+DeliveryRoutes.post( "/my-account/add/card", CardRequest.ValidateAddCard, CardController.AddCard );
+DeliveryRoutes.get( "/my-account/see-all/card", CardRequest.ValidateFindAllCard, CardController.FindAllCard );
+DeliveryRoutes.delete( "/my-account/card/delete", CardRequest.ValidateDeleteCard, CardController.DeleteCard );
 

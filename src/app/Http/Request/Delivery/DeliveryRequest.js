@@ -35,7 +35,7 @@ class AddressRequest {
 	async ValidateSeeOrderHistory ( req, res, next ) {
 
 		const HeadersValidator = yup.object().shape({
-			address_id: yup.string().required()
+			session_token: yup.string().required()
 		});
 
 		try {
