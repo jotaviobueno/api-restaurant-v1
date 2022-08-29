@@ -90,9 +90,7 @@ class CardController {
 		const InformationDeleted = await repository.deleteCard( card_id );
 
 		if ( InformationDeleted )
-			return await ResponseHelper.success( res, {
-				InformationDeleted: {InformationDeleted}
-			});
+			return await ResponseHelper.success( res, InformationDeleted );
 			
 		return await ResponseHelper.unprocessableEntity( res, { error:  "unable to process request" });
 	}

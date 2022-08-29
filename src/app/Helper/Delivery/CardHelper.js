@@ -25,8 +25,6 @@ class CardHelper {
 	async existCardId ( id ) {
 		const findCard = await CardModel.findOne({ id: id, deleted_at: null });
 
-		console.log(findCard);
-	
 		if ( findCard === null )
 			return false;
 

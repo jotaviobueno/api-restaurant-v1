@@ -14,6 +14,8 @@ import CardController from "../http/Controller/Delivery/CardController.js";
 import DeliveryRequest from "../http/Request/Delivery/DeliveryRequest.js";
 import UpdateRequest from "../http/Request/Delivery/UpdateRequest.js";
 
+DeliveryRoutes.post( "/create/request/c_id/:card_id/a_id/:address_id", DeliveryController.CreateRequest );
+
 DeliveryRoutes.post( "/add/address", DeliveryRequest.ValidateAddAnddress, AddressController.AddAddress );
 DeliveryRoutes.get( "/my-address", DeliveryRequest.ValidateFindAllAddress, AddressController.FindAllAddress );
 DeliveryRoutes.delete( "/address/delete", DeliveryRequest.ValidateDelete, AddressController.DeleteAddress );
